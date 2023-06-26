@@ -38,6 +38,8 @@ class TextAnalyze:
             parsed_word = morph.parse(word)[0]
             if parsed_word.tag.POS in self.part_of_speech:
                 self.analyzed_words.append(parsed_word.normal_form)
+        if self.analyzed_words == []:
+            raise Exception("Нету слов для анализа!")        
                     
     def print_text(self):
         """ выводит строку текста на экран """
