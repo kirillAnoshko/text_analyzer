@@ -1,6 +1,9 @@
 import re
 import pymorphy3
 from typing import NoReturn
+import pytagcloud
+import collections
+
 
 class TextAnalyze:
     def __init__(self, file_name=None, part_of_speech=["VERB", "NOUN"]):
@@ -39,8 +42,10 @@ class TextAnalyze:
             if parsed_word.tag.POS in self.part_of_speech:
                 self.analyzed_words.append(parsed_word.normal_form)
         if self.analyzed_words == []:
-            raise Exception("Нету слов для анализа!")        
-                    
+            raise Exception("Нет слов для анализа!")  
+        if self.analyzed_words == []:
+            raise Exception("Нету слов для анализа!")
+
     def print_text(self):
         """ выводит строку текста на экран """
         print(self.clean_text)
@@ -48,10 +53,17 @@ class TextAnalyze:
         print(f"В этом тексте {len(self.words)} слов")
         print(f"В этом тексте {len(self.analyzed_words)} проанализированных слов")
 
+    def create_wordcloud(self) -> None:
+        """
+        Создает облако слов на основе отфильтрованных слов и сохраняет его в файл.
+        Возвращает: None.
+        """
+        word_counts = collections.Counter(self.analyzed_words)
+        top10_words = word_counts.most_common(10)
+
+        self.wordcloud = pytagcloud.make_tags(pytagcloud.makewords(top10_words))
+        pytagcloud.create_cloud('wordcloud.png', self.wordcloud)
+        print("Облако слов сохранено в файл 'wordcloud.png'")
+
 
 TextAnalyze(file_name="text.txt")
-
-                
-            
-
-                
