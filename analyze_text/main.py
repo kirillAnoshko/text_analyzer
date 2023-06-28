@@ -15,6 +15,7 @@ class TextAnalyze:
         self.prepare_text()
         self.make_analyzed_words()
         self.print_text()
+        self.create_wordcloud()
 
     def read_file(self, file_name) -> None | NoReturn:
         """ пытается открыть файл и считать его в строку """
@@ -59,10 +60,9 @@ class TextAnalyze:
         Возвращает: None.
         """
         word_counts = collections.Counter(self.analyzed_words)
-        top10_words = word_counts.most_common(10)
 
-        self.wordcloud = pytagcloud.make_tags(pytagcloud.makewords(top10_words))
-        pytagcloud.create_cloud('wordcloud.png', self.wordcloud)
+        self.wordcloud = pytagcloud.make_tags([(word, count) for word, count in word_counts.items()], maxsize=36)
+        pytagcloud.create_tag_image(self.wordcloud, 'wordcloud.png', size=(800, 600), fontname='Lobster')
         print("Облако слов сохранено в файл 'wordcloud.png'")
 
 
